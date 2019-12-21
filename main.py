@@ -1,3 +1,5 @@
+#Created by Evgeniy Vargin for learning
+
 from tkinter import *
 from initdata import *
 

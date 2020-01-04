@@ -6,8 +6,61 @@ Created on Tue Dec 17 21:27:03 2019
 """
 
 import shelve
+import pickle as pck
 
-class EmpTable:
+class EmpPickle:
+    def __init__(self,filename='class-pickle'):
+        self.filename = filename
+    
+    def open(filename='class-pickle'):
+        result = open(filename,'rb')
+        return result
+    
+    def close(db):
+        try:
+            db.close()
+            result = 'Table closed successfully'
+        except:
+            result = 'No such table. Table not closed'
+
+    def getRow(key,filename='class-pickle'):
+        db = open(filename,'rb')
+        try:
+            result = db[key]
+        except:
+            result = None
+        db.close()
+        return result
+    
+    def setRow(rec,filename='class-pickle'):
+        db = open(filename,'rb')
+        try:
+            if rec.key in db:
+                db[rec.key] = rec
+                print('%s proccessed successfully'%rec)
+            else:
+                db[rec.key] = rec
+                print('%s added successfully'%rec)
+            result = db[rec.key]
+        except AttributeError:
+            print('%s not Employee!'%rec)
+            result = None
+        #except:
+        #    print('Unknown error')
+        #    result = None
+        db.close()
+        return result
+    
+    def delRow(key,filename='class-pickle'):
+        db = open(filename,'rb')
+        try:
+            del db[key]
+            result = 'Row (key = %s) deleted successfully'%key
+        except:
+            result = 'No such row (key = %s). Not deleted'%key
+        return result
+    
+class EmpShelve:
     def __init__(self,name='class-shelve'):
         self.name = name
         
@@ -75,22 +128,22 @@ class Employee:
         return {'key': self.key,'name': self.name,'job': self.job,'age': self.age,'salary': self.salary,'bonus': self.bonus}
     
 class Manager(Employee):
-    def __init__(self,key,name,age,salary=80000.0,bonus=0.1):
-        Employee.__init__(self,key=key,name=name,age=age,job='Manager',salary=salary + salary * bonus,bonus=bonus)
+    def __init__(self,Key,Name,Age,Salary=80000.0,bonus=0.1):
+        Employee.__init__(self,Key=Key,Name=Name,Age=Age,Job='Manager',Salary=Salary + Salary * Bonus,Bonus=Bonus)
 
 class Developer(Employee):
-    def __init__(self,key,name,age,salary=30000.0,bonus=0.0):
-        Employee.__init__(self,key=key,name=name,age=age,job='Developer',salary=salary + salary * bonus,bonus=bonus)
+    def __init__(self,Key,Name,Age,Salary=30000.0,Bonus=0.0):
+        Employee.__init__(self,Key=Key,Name=Name,Age=Age,Job='Developer',Salary=Salary + Salary * Bonus,Bonus=Bonus)
 
 class Hardware(Employee):
-    def __init__(self,key,name,age,salary=50000.0,bonus=0.0):
+    def __init__(self,Key,Name,Age,Salary=50000.0,Bonus=0.0):
         Employee.__init__(self,key=key,name=name,age=age,job='Hardware',salary=salary + salary * bonus,bonus=bonus)
 
 class Engineer(Employee):
-    def __init__(self,key,name,age,salary=60000.0,bonus=0.0):
+    def __init__(self,Key,Name,Age,Salary=60000.0,Bonus=0.0):
         Employee.__init__(self,key=key,name=name,age=age,job='Engineer',salary=salary + salary * bonus,bonus=bonus)
 
         
 class DataScientist(Employee):
-    def __init__(self,key,name,age,salary=60000.0,bonus=0.0):
+    def __init__(self,Key,Name,Age,Salary=60000.0,Bonus=0.0):
         Employee.__init__(self,key=key,name=name,age=age,job='DataScientist',salary=salary + salary * bonus,bonus=bonus)

@@ -2,8 +2,9 @@
 
 from tkinter import *
 from initdata import *
+#import pandas as pd
 
-flds = {'key': 'Ид:','name': 'Ф.И.О.:','job': 'Должность:','age': 'Возраст:','salary': 'Заработная плата:','bonus': 'Бонус:'}
+flds = {'key': 'Ид:','name': 'Ф.И.О.:','job': 'Дожность:','age': 'Возраст:','salary': 'Заработная плата:','bonus': 'Бонус:'}
 
 class SaveBtn(Button):
     def __init__(self,Owner,Text,Rn):
@@ -72,7 +73,7 @@ class MainGrid(Frame):
                 ent.insert(0,self.dataset[key].asDict()[field])
                 e.append(ent)
             self.cont.getItemByNum(rownum).append(e)
-            b = SaveBtn(self,Text='Сохранить (%s)'%key,Rn=rownum)
+            b = SaveBtn(self,Text='Save (%s)'%key,Rn=rownum)
             b.bind('<Button-1>',saveRecord)
             b.grid(row=rownum,column=len(self.fields) + 1,padx=1,pady=1)
             self.cont.getItemByNum(rownum).append(b)
@@ -87,9 +88,15 @@ def saveRecord(event):
 def main():
     root = Tk()
     root.geometry("1024x768")
-    tbl = EmpTable
+    tbl = EmpShelve
     ds = tbl.open()
+    #bob = tbl.setRow(Developer('bob','Bob Smith',42))
+    #sue = tbl.setRow(Hardware('sue','Sue Johns',45))
+    #tom = tbl.setRow(Manager('tom','Tom Kite',50,salary=100000.0,bonus=0.05))
+    #john = tbl.setRow(Engineer('john','John Doe',42))
+    #kate = tbl.setRow(DataScientist('kate','Kate Patrow',22))
     app = MainGrid(root,ds,flds)
+    
     ds.close()
     #
     root.mainloop()
@@ -98,13 +105,6 @@ if __name__ == '__main__':
     
     main()
 
-    """
-    #bob = tbl.setRow(Developer('bob','Bob Smith',42))
-    #sue = tbl.setRow(Hardware('sue','Sue Johns',45))
-    #tom = tbl.setRow(Manager('tom','Tom Kite',50,salary=100000.0,bonus=0.05))
-    #john = tbl.setRow(Engineer('john','John Doe',42))
-    #kate = tbl.setRow(DataScientist('kate','Kate Patrow',22))
-    """
     """
     tbl = EmpTable
     print('*************** Table Begin ***************')

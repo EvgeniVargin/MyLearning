@@ -8,6 +8,24 @@ Created on Tue Dec 17 21:27:03 2019
 import shelve
 import pickle as pck
 
+def dictRectangle(inDict):
+    result = {}
+    #Сформируем список всех Ид
+    ids = []
+    for (x,xkey) in enumerate(inDict):
+        if x > 0:
+            break
+        for ykey in inDict[xkey]:
+            ids.append(ykey)
+    #Сформируем словарь с пустыми словарями
+    for rw in ids:
+        result[rw] = {}
+    #Заполним пустую матрицу значениями
+    for rw in ids:
+        for col in inDict:
+            result[rw][col] = inDict[col][rw]
+    return result
+
 class EmpPickle:
     def __init__(self,filename='class-pickle'):
         self.filename = filename
@@ -89,17 +107,11 @@ class EmpShelve:
         try:
             if rec.key in db:
                 db[rec.key] = rec
-                print('%s proccessed successfully'%rec)
             else:
                 db[rec.key] = rec
-                print('%s added successfully'%rec)
             result = db[rec.key]
         except AttributeError:
-            print('%s not Employee!'%rec)
             result = None
-        #except:
-        #    print('Unknown error')
-        #    result = None
         db.close()
         return result
     
@@ -127,8 +139,11 @@ class Employee:
     def asDict(self):
         return {'key': self.key,'name': self.name,'job': self.job,'age': self.age,'salary': self.salary,'bonus': self.bonus}
     
+    def getKey(self):
+        return self.key
+    
 class Manager(Employee):
-    def __init__(self,Key,Name,Age,Salary=80000.0,bonus=0.1):
+    def __init__(self,Key,Name,Age,Salary=80000.0,Bonus=0.1):
         Employee.__init__(self,Key=Key,Name=Name,Age=Age,Job='Manager',Salary=Salary + Salary * Bonus,Bonus=Bonus)
 
 class Developer(Employee):
@@ -137,13 +152,13 @@ class Developer(Employee):
 
 class Hardware(Employee):
     def __init__(self,Key,Name,Age,Salary=50000.0,Bonus=0.0):
-        Employee.__init__(self,key=key,name=name,age=age,job='Hardware',salary=salary + salary * bonus,bonus=bonus)
+        Employee.__init__(self,Key=Key,Name=Name,Age=Age,Job='Hardware',Salary=Salary + Salary * Bonus,Bonus=Bonus)
 
 class Engineer(Employee):
     def __init__(self,Key,Name,Age,Salary=60000.0,Bonus=0.0):
-        Employee.__init__(self,key=key,name=name,age=age,job='Engineer',salary=salary + salary * bonus,bonus=bonus)
+        Employee.__init__(self,Key=Key,Name=Name,Age=Age,Job='Engineer',Salary=Salary + Salary * Bonus,Bonus=Bonus)
 
         
 class DataScientist(Employee):
     def __init__(self,Key,Name,Age,Salary=60000.0,Bonus=0.0):
-        Employee.__init__(self,key=key,name=name,age=age,job='DataScientist',salary=salary + salary * bonus,bonus=bonus)
+        Employee.__init__(self,Key=Key,Name=Name,Age=Age,Job='DataScientist',Salary=Salary + Salary * Bonus,Bonus=Bonus)

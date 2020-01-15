@@ -142,6 +142,8 @@ class Employee:
     def getKey(self):
         return self.key
     
+    
+    
 class Manager(Employee):
     def __init__(self,Key,Name,Age,Salary=80000.0,Bonus=0.1):
         Employee.__init__(self,Key=Key,Name=Name,Age=Age,Job='Manager',Salary=Salary + Salary * Bonus,Bonus=Bonus)

@@ -2,17 +2,16 @@
 
 from tkinter import *
 from initdata import *
+from connections import *
 #import pandas as pd
-
+'''
 tst = {}
 for x in range(3):
     rw = {}
     for y in range(4):
         rw[y] = 'Cell %s %s'%(y,x)
     tst[x] = rw
-
-flds = {'key': 'Ид:','name': 'Ф.И.О.:','job': 'Дожность:','age': 'Возраст:','salary': 'Заработная плата:','bonus': 'Бонус:'}
-
+'''
 class DmlBtn(Button):
     def __init__(self,Owner,Text,Rn):
         Button.__init__(self,Owner,text=Text)
@@ -49,15 +48,17 @@ class Container:
     
 
 class MainGrid(Frame):
-    def __init__(self,Owner,Dataset,Fields):
+    def __init__(self,Owner,Dataset):
         Frame.__init__(self,Owner)
         self.owner = Owner
-        self.dataset = Dataset
-        self.fields = Fields
+        self.dataset = dictRectangle(Dataset)
+        self.fields = {}
+        for key in Dataset:
+            self.fields[key] = key
         self.cont = Container()
         self.statusLabel = Label(self,text = '')
         self.rebuild()
-    
+
     def getStatus(self):
         return self.statusLabel['text']
     
@@ -89,7 +90,7 @@ class MainGrid(Frame):
                 #r.append(self.dataset[key].asDict()[field])
                 ent = Entry(self)
                 ent.grid(row = idx+1,column=num,padx=1,pady=1)
-                ent.insert(0,self.dataset[key].asDict()[field])
+                ent.insert(0,self.dataset[key][field])
                 e.append(ent)
             self.cont.getItemByNum(rownum).append(e)
             b = DmlBtn(self,Text='Save (%s)'%key,Rn=rownum)
@@ -112,10 +113,29 @@ def delRecord(event):
     
 
 def main():
-    root = Tk()
-    root.geometry("1200x600")
-    tbl = EmpShelve
-    ds = tbl.open()
+    try:
+        #cn = pgSetConnect(inDB='administrator', inUser='administrator',inPwd='Kartonka13')
+        cn = psycopg2.connect(dbname='administrator', user='administrator',password='Kartonka13', host='localhost')
+        cur = cn.cursor()
+        
+        key = 'sue'
+        cur.execute("""UPDATE tb_employees SET name = 'Sue Jones Junior' WHERE key = '%s'"""%key)
+        cn.commit()
+    
+        print(pd.read_sql_query("""SELECT key,name,position,age||' years' AS age,salary,bonus FROM tb_employees """,cn,index_col='key').to_dict())
+    finally:        
+        del cur
+        cn.close
+        
+    #print(cur.fetchone()["bonus"])
+    #cn.close()
+
+    #ds = pd.read_sql_query("""SELECT key AS id,key,name,position as job,age,salary,bonus FROM tb_employees""",cn,index_col='id').to_dict()
+
+    #root = Tk()
+    #root.geometry("1200x600")
+    #tbl = EmpShelve
+    #ds = tbl.open()
     
     #bob = tbl.setRow(Developer('bob','Bob Smith',42))
     #sue = tbl.setRow(Hardware('sue','Sue Johns',45))
@@ -123,10 +143,10 @@ def main():
     #john = tbl.setRow(Engineer('john','John Doe',42))
     #kate = tbl.setRow(DataScientist('kate','Kate Patrow',22))
     
-    app = MainGrid(root,ds,flds)
+    #app = MainGrid(root,ds)
     
-    ds.close()
-    root.mainloop()
+    #ds.close()
+    #root.mainloop()
 
 if __name__ == '__main__':
     main()
